@@ -3,7 +3,6 @@
 #include <arpa/inet.h>
 
 #define ETHER_ADDR_LEN 6 
-#define LIBNET_LIL_ENDIAN 1
 
 void usage() {
   printf("syntax: pcap_test <interface>\n");
@@ -69,13 +68,19 @@ struct libnet_tcp_hdr
 
     u_int32_t th_seq;          /* sequence number */
     u_int32_t th_ack;          /* acknowledgement number */
+
+    u_int16_t th_x2_off;        // data offset, (unused)
+
+/*
 #if (LIBNET_LIL_ENDIAN)
-    u_int8_t th_x2:4,         /* (unused) */
-           th_off:4;        /* data offset */
+    u_int8_t th_x2:4,         // (unused) 
+           th_off:4;        // data offset 
 #endif
 #if (LIBNET_BIG_ENDIAN)
-    u_int8_t th_off:4,        /* data offset */
-           th_x2:4;         /* (unused) */
+    u_int8_t th_off:4,        // data offset 
+           th_x2:4;         // (unused) 
+*/
+
 #endif
     u_int8_t  th_flags;       /* control flags */
 #ifndef TH_FIN
@@ -202,9 +207,16 @@ int main(int argc, char* argv[]) {
 
           struct u_int8_t data = (struct u_int8_t *)(packet + 14 + (ip4->ip_hl_v & 0xf ) * 4 + (tcp->th_off) * 4);
 
-          //ip_len;
+          //tcp_len;
+          tcp->th_x2_off = ntohs(tcp->th_x2_off);
 
-          printf("data : %x", data);
+          if((tcp->th_x2_off & 0xff) < 16) {
+            printf("data : %n", data);
+          }
+          else {
+            printf("data : %x\n", data);
+          }
+
              
       }
 
