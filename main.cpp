@@ -5,19 +5,19 @@
 #define ETHER_ADDR_LEN 6 
 
 void usage() {
-  printf("syntax: pcap_test <interface>\n");
-  printf("sample: pcap_test wlan0\n");
+    printf("syntax: pcap_test <interface>\n");
+    printf("sample: pcap_test wlan0\n");
 }
 
 struct ip_addr {
-  u_int8_t s_ip[4];
+    u_int8_t s_ip[4];
 };
 
 struct libnet_ethernet_hdr
 {
     u_int8_t  ether_dhost[ETHER_ADDR_LEN];/* destination ethernet address */
     u_int8_t  ether_shost[ETHER_ADDR_LEN];/* source ethernet address */
-    u_int16_t ether_type;                 /* protocol */
+    u_int16_t ether_type;                 /* protocol */    
 };
 
 struct libnet_ipv4_hdr
